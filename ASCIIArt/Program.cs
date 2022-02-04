@@ -9,7 +9,10 @@ namespace ASCIIArt
         static void Main(string[] args)
         {
             var image = new MagickImage(@"C:\Repos\ASCIIArt\ASCIIArt\ascii-pineapple.jpg");
-            var pixelArrays = new List<int[]>();
+            var characters = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$".ToCharArray();
+            var divider = 256 / characters.Length;
+
+            image.Resize(new Percentage(50));
 
             using (var pixels = image.GetPixels())
             {
@@ -18,18 +21,12 @@ namespace ASCIIArt
                     for (int y = 0; y < image.Height; y++)
                     {
                         var pixelValue = pixels.GetValue(x, y);
-                        pixelArrays.Add(new int[] { pixelValue[0], pixelValue[1], pixelValue[2] });
+                        var pixelBrightness = (pixelValue[0] + pixelValue[1] + pixelValue[2]) / 3;
+                        var index = (pixelBrightness * characters.Length) / 255;
+                        Console.Write(characters[index]);
                     }
+                    Console.WriteLine();
                 }
-            }
-
-            Console.WriteLine("Loaded image!");
-            Console.WriteLine($"Image size: {image.Width} x {image.Height}");
-            Console.WriteLine("Iterating through pixel contents:");
-
-            foreach (var array in pixelArrays)
-            {
-                Console.WriteLine($"({array[0]}, {array[1]}, {array[2]})");
             }
         }
     }
